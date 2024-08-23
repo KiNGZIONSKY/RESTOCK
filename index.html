@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Restock Inventory</title>
+</head>
+<body>
+    <h1>Restock Inventory</h1>
+
+    <form>
+        <div id="shelves"></div>
+        <button type="button" onclick="calculateRestock()">Calculate Restock</button>
+    </form>
+
+    <div id="summary"></div>
+
+    <script>
+        var shelves = {
+            "Shelf 1": [
+                'Robinson\'s Raspberry and Apple',
+                'Robinson\'s BlackBerry and BlueBerry',
+                'Ribena BlackCurrant',
+                'Ribena Light BlackCurrant',
+                'Oasis Citrus Punch',
+                'Oasis Summer Fruits',
+                'Original Canned Coke',
+                'Coke Zero Sugar',
+                'Diet Coke',
+                'Bottled Diet Coke',
+                'Diet No Caffeine Coke',
+                'Pepsi',
+                'Pepsi Electric',
+                'Pepsi Max Cherry',
+                'Pepsi Max Lemon',
+                'Original Pepsi'
+            ],
+            "Shelf 2": [
+                'Vimto Juice',
+                'Capri Sun Orange',
+                'Fruit Shoot Blackcurrant',
+                'Fruit Shoot Orange',
+                'Rubicon Spring Blackberry and Raspberry',
+                'Lipton Lemon Flavored Ice Tea',
+                'Peach Ice Tea',
+                'Vimto Fizzy',
+                'Tango Orange',
+                'Tango Mango',
+                'Tango Cherry Blast',
+                'Tango Raspberry Blast',
+                'Dr. Pepper',
+                'Original Coca-Cola Bottles',
+                'Cherry Coca-Cola Bottle',
+                'Lemon Coca-Cola Bottle',
+                'Coca-Cola Zero Sugar Bottle',
+                'Coca-Cola Zero Sugar Vanilla',
+                'Coca-Cola Zero Sugar Lemon',
+                'Coca-Cola Zero Sugar Cherry',
+                'Coca-Cola Zero Sugar Lemon'
+            ],
+            "Shelf 3": [
+                'Fizzy Water',
+                'Iron Brew',
+                'Sprite',
+                '7-Up',
+                'Fanta',
+                'Fanta 0 Sugar',
+                'Fanta Fruit Twist',
+                'Fanta Lemon',
+                'Monster Nitro',
+                'Monster 0 Sugar Energy',
+                'Monster Energy Absolute Zero',
+                'Monster Energy Ultra Paradise',
+                'Monster Energy Zero Sugar',
+                'Monster Juiced Mango Loco',
+                'Monster Ozzy Lemonade',
+                'Monster Ultra Golden Pineapple',
+                'Monster Pipeline Punch',
+                'Monster Pacific Punch',
+                'Monster Monarch'
+            ],
+            "Shelf 4": [
+                'Big SmartWater',
+                'Small SmartWater',
+                'Ice Valley Water',
+                'Volvic Touch Of Lemon And Lime',
+                'Monster Energy Ultra Zero Sugar',
+                'Monster Ultra Fiesta Mango',
+                'Monster Ultra Peachy Tea',
+                'Monster Ultra Robo',
+                'Monster Ultra Watermelon',
+                'Monster Chaotic',
+                'Monster Ultra Strawberry Dreams',
+                'Relentless Original',
+                'Rockstar Guardian'
+            ]
+        };
+
+        var restockNeeded = {};
+
+        function createShelfInputs(shelfName, items) {
+            var shelfDiv = document.createElement("div");
+            shelfDiv.innerHTML = "<h2>" + shelfName + "</h2>";
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                var input = document.createElement("input");
+                input.type = "number";
+                input.placeholder = "Restock amount";
+                input.id = "restock-" + shelfName + "-" + i;
+                var label = document.createElement("label");
+                label.textContent = item;
+                label.appendChild(input);
+                shelfDiv.appendChild(label);
+            }
+            document.getElementById("shelves").appendChild(shelfDiv);
+        }
+
+        function calculateRestock() {
+            restockNeeded = {};
+            for (var shelfName in shelves) {
+                var items = shelves[shelfName];
+                for (var i = 0; i < items.length; i++) {
+                    var inputId = "restock-" + shelfName + "-" + i;
+                    var amount = parseInt(document.getElementById(inputId).value);
+                    if (!isNaN(amount) && amount > 0) {
+                        restockNeeded[items[i]] = amount;
+                    }
+                }
+            }
+            displaySummary();
+        }
+
+        function displaySummary() {
+            var summaryDiv = document.getElementById("summary");
+            summaryDiv.innerHTML = "<h2>Restock Summary</h2>";
+            if (Object.keys(restockNeeded).length > 0) {
+                for (var item in restockNeeded) {
+                    var amount = restockNeeded[item];
+                    var summaryItem = document.createElement("p");
+                    summaryItem.textContent = item + ": " + amount;
+                    summaryDiv.appendChild(summaryItem);
+                }
+            } else {
+                var noItemsMessage = document.createElement("p");
+                noItemsMessage.textContent = "No items need restocking.";
+                summaryDiv.appendChild(noItemsMessage);
+            }
+        }
+
+        // Create input fields for each shelf
+        for (var shelfName in shelves) {
+            createShelfInputs(shelfName, shelves[shelfName]);
+        }
+    </script>
+</body>
+</html>
